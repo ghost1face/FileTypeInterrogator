@@ -27,6 +27,15 @@ namespace FileTypeInterrogator
         Gif,
         Svg,
         Ico,
-        Psd
+        Psd,
+
+        // Compressed Formats
+        Zip,
+
+        // Video Formats
+        Mp4,
+        Mpeg,
+        Avi,
+        Wmv,
     }
 }

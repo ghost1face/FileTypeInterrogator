@@ -6,9 +6,10 @@ namespace FileTypeInterrogator
     /// </summary>
     public class FileTypeInfo
     {
-        public FileTypeInfo(string name, FileType fileType, byte?[] header, int offset = 0, byte?[] additionalIdentifier = null)
+        internal FileTypeInfo(string name, FileType fileType, string mimeType, byte?[] header, int offset = 0, byte?[] additionalIdentifier = null)
         {
             Name = name;
+            MimeType = mimeType;
             FileType = fileType;
             Header = header;
             Offset = offset;
@@ -24,12 +25,17 @@ namespace FileTypeInterrogator
         public string Name { get; private set; }
 
         /// <summary>
-        /// Gets a collection of <see cref="FileType" /> extensions which are related to this type
+        /// Gets the <see cref="FileType" /> extension which is related to this type
         /// </summary>
         /// <value>
         /// The supported types.
         /// </value>
         public FileType FileType { get; private set; }
+
+        /// <summary>
+        /// Gets the MimeType of this type
+        /// </summary>
+        public string MimeType { get; private set; }
 
         /// <summary>
         /// Gets unique header 'Magic Numbers' to identifiy this file type
