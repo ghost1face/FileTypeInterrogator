@@ -54,7 +54,7 @@ namespace FileTypeInterrogator
                 throw new ArgumentNullException(nameof(inputStream));
 
             inputStream.Position = 0;
-            byte[] byteBuffer = new byte[4096]; // read 4kb
+            byte[] byteBuffer = new byte[Math.Min(inputStream.Length, 4096)]; // read smallest of 4kb or file length
             inputStream.Read(byteBuffer, 0, byteBuffer.Length);
             inputStream.Position = 0;
 
