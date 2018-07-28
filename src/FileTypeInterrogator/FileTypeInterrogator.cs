@@ -85,7 +85,7 @@ namespace FileTypeInterrogator
 
         private static bool IsText(IEnumerable<byte> input)
         {
-            var zeroBytesFound = 0;
+            int zeroBytesFound = 0;
             foreach (var b in input)
             {
                 if (zeroBytesFound > 1) // return if the count is greater than 1
@@ -99,17 +99,28 @@ namespace FileTypeInterrogator
         private static bool IsMatchingType(IList<byte> input, FileTypeInfo type)
         {
             // find an initial match based on the header and offset
-            var isMatch = FindMatch(input, type.Header, type.Offset);
+            bool isMatch = FindMatch(input, type.Header, type.Offset);
 
             // some file types (Microsoft) have the same header
             // but different signature in another location, if its one of these determine what the true file type is
             if (isMatch && type.AdditionalIdentifier.Length > 0)
             {
                 // find all indices of matching the 1st byte of the additional sequence
-                var matchingIndices = input.Select((b, i) => b == type.AdditionalIdentifier[0] ? i : -1).Where(i => i != -1).ToList();
+                var matchingIndices = new List<int>();
+                for (int i = 0; i < input.Count; i++)
+                {
+                    if (input[i] == type.AdditionalIdentifier[0])
+                        matchingIndices.Add(i);
+                }
 
                 // investigate all of them for a match
-                isMatch = matchingIndices.Any(i => FindMatch(input, type.AdditionalIdentifier, i));
+                foreach (int potentialMatchingIndex in matchingIndices)
+                {
+                    isMatch = FindMatch(input, type.AdditionalIdentifier, potentialMatchingIndex);
+
+                    if (isMatch)
+                        break;
+                }
             }
 
             return isMatch;
@@ -121,11 +132,11 @@ namespace FileTypeInterrogator
             if (input.Count < offset)
                 return false;
 
-            var matchingCount = 0;
+            int matchingCount = 0;
             for (var i = 0; i < searchArray.Count; i++)
             {
                 // set the offset location
-                var calculatedOffset = i + offset;
+                int calculatedOffset = i + offset;
 
                 // if file offset is not set to zero, we need to take this into account when comparing.
                 // if byte in searchArray is set to null, means this byte is variable, ignore it
