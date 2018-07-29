@@ -31,6 +31,7 @@ namespace FileTypeInterrogator
 
         // Compressed Formats
         Zip,
+        Zip7Z,
 
         // Video Formats
         Mp4,
