@@ -17,7 +17,6 @@ namespace FileTypeInterrogator
         Csv,
         Tsv,
 
-
         // Image types
         Bmp,
         Jpg,
