@@ -1,90 +1,120 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FileTypeInterrogator.Tests
 {
-    [TestClass]
-    public class FileTypeInterrogatorTests
+    public partial class FileTypeInterrogatorTests
     {
-        private IFileTypeInterrogator fileTypeInterrogator;
-
-        [TestInitialize]
-        public void Init()
+        [DataTestMethod]
+        [DataRow("PDF", DisplayName = "PDF Test")]
+        [DataRow("FDF", DisplayName = "FDF Test")]
+        public void CanDetectAdobe(string extension)
         {
-            fileTypeInterrogator = new FileTypeInterrogator();
+            DetectType(extension);
+        }
+
+        [DataTestMethod]
+        [DataRow("BMP", DisplayName = "BMP Test")]
+        [DataRow("GIF", DisplayName = "GIF Test")]
+        [DataRow("JP2", DisplayName = "JP2 Test")]
+        [DataRow("JPG", DisplayName = "JPG Test")]
+        [DataRow("PNG", DisplayName = "PNG Test")]
+        [DataRow("PSD", DisplayName = "PSD Test")]
+        [DataRow("TIF", DisplayName = "TIF Test")]
+        public void CanDetectImages(string extension)
+        {
+            DetectType(extension);
         }
 
         [DataTestMethod]
         [DataRow("3GP", DisplayName = "3GP Test")]
-        [DataRow("7Z", DisplayName = "7Z Test")]
-        [DataRow("BMP", DisplayName = "BMP Test")]
-        [DataRow("DOC", DisplayName = "DOC Test")]
-        [DataRow("GIF", DisplayName = "GIF Test")]
-        [DataRow("JP2", DisplayName = "JP2 Test")]
-        [DataRow("JPG", DisplayName = "JPG Test")]
-        [DataRow("MP3", DisplayName = "MP3 Test")]
+        [DataRow("AVI", DisplayName = "AVI Test")]
+        [DataRow("FLV", DisplayName = "FLV Test")]
+        [DataRow("MID", DisplayName = "MID Test")]
         [DataRow("MP4", DisplayName = "MP4 Test")]
-        [DataRow("PDF", DisplayName = "PDF Test")]
-        [DataRow("PNG", DisplayName = "PNG Test")]
+        [DataRow("WMV", DisplayName = "WMV Test")]
+        public void CanDetectVideo(string extension)
+        {
+            DetectType(extension);
+        }
+
+        [DataTestMethod]
+        [DataRow("AC3", DisplayName = "AC3 Test")]
+        [DataRow("AIFF", DisplayName = "AIFF Test")]
+        [DataRow("FLAC", DisplayName = "FLAC Test")]
+        [DataRow("MP3", DisplayName = "MP3 Test")]
+        [DataRow("OGG", DisplayName = "OGG Test")]
+        [DataRow("RA", DisplayName = "RA Test")]
+        public void CanDetectAudio(string extension)
+        {
+            DetectType(extension);
+        }
+
+        [DataTestMethod]
+        [DataRow("DOC", DisplayName = "DOC Test")]
+        [DataRow("DOCX", DisplayName = "DOC Test")]
         [DataRow("PPT", DisplayName = "PPT Test")]
         [DataRow("PPTX", DisplayName = "PPTX Test")]
-        [DataRow("PSD", DisplayName = "PSD Test")]
-        [DataRow("TIF", DisplayName = "TIF Test")]
         [DataRow("XLS", DisplayName = "XLS Test")]
         [DataRow("XLSX", DisplayName = "XLSX Test")]
+        public void CanDetectOffice(string extension)
+        {
+            DetectType(extension);
+        }
+
+        [DataTestMethod]
+        [DataRow("OTF", DisplayName = "OTF Test")]
+        [DataRow("TTF", DisplayName ="TTF Test")]
+        [DataRow("WOFF", DisplayName = "WOFF Test")]
+        public void CanDetectFont(string extension)
+        {
+            DetectType(extension);
+        }
+
+        [DataTestMethod]
+        [DataRow("7Z", DisplayName = "7Z Test")]
+        [DataRow("RAR", DisplayName = "RAR Test")]
         [DataRow("ZIP", DisplayName = "ZIP Test")]
-        public void CanDetectType(string fileType)
+        public void CanDetectCompressed(string extension)
         {
-            var filePath = GetFileByType(fileType);
-            var fileContents = File.ReadAllBytes(filePath);
-
-            var result = fileTypeInterrogator.DetectType(fileContents);
-
-            Assert.IsNotNull(result);
-            Assert.IsTrue(
-                result.FileType.Equals(fileType, StringComparison.OrdinalIgnoreCase) ||
-                result.Alias?.Any(a => a.Equals(fileType, StringComparison.OrdinalIgnoreCase)) == true);
+            DetectType(extension);
         }
 
-        [TestMethod]
-        public void CanDetectAlias_Jpg()
+        private void DetectType(string extension)
         {
-            var filePath = GetFileByType("JPG");
-            var fileContents = File.ReadAllBytes(filePath);
+            var files = GetFilesByExtension(extension);
+            foreach (var file in files)
+            {
+                var fileContents = File.ReadAllBytes(file);
 
-            var result = fileTypeInterrogator.IsType(fileContents, "jpg");
+                var result = fileTypeInterrogator.DetectType(fileContents);
 
-            Assert.IsTrue(result);
+                Assert.IsNotNull(result);
+                Assert.IsTrue(
+                    result.FileType.Equals(extension, StringComparison.OrdinalIgnoreCase) ||
+                    result.Alias?.Any(a => a.Equals(extension, StringComparison.OrdinalIgnoreCase)) == true);
+            }
         }
-
-        [TestMethod]
-        public void CanDetectAlias_Jpeg()
-        {
-            var filePath = GetFileByType("JPG");
-            var fileContents = File.ReadAllBytes(filePath);
-
-            var result = fileTypeInterrogator.IsType(fileContents, "jpeg");
-
-            Assert.IsTrue(result);
-        }
-
-        [TestMethod]
-        public void CanDetectJpg_By_MimeType()
-        {
-            var filePath = GetFileByType("JPG");
-            var fileContents = File.ReadAllBytes(filePath);
-
-            var result = fileTypeInterrogator.IsType(fileContents, "image/jpeg");
-
-            Assert.IsTrue(result);
-        }
-
 
         private string GetFileByType(string type)
         {
-            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestFiles", $"{type}.{type}");
+            return Path.Combine(GetTestFileDirectory(), $"{type}.{type}");
+        }
+
+        private IEnumerable<string> GetFilesByExtension(string type)
+        {
+            // GetFiles with searchPattern returns 4 character extensions when
+            // filtering for 3 so we'll filter ourselves
+            return Directory.GetFiles(GetTestFileDirectory(), $"*.{type}")
+                .Where(path => path.EndsWith(type, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private string GetTestFileDirectory()
+        {
+            return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TestFiles");
         }
     }
 }
