@@ -1,19 +1,32 @@
-# File type interrogator
+# FileTypeInterrogator
 
-Determine file type by 'Magic Numbers' for most common file types instead of trusting file extensions
+netstandard library for detecting file types by 'magic numbers', similar to the `file` command in Linux/Unix. Useful for validating file uploads instead of trusting file extensions.
 
-# License
+# Usage
 
-    Copyright 2018 Daniel Destouche
+```
+IFileTypeInterrogator interrogator = new FileTypeInterrogator();
 
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
+byte[] fileBytes = File.ReadAllBytes("pdfFile.pdf");
 
-       http://www.apache.org/licenses/LICENSE-2.0
+FileTypeInfo fileTypeInfo = interrogator.DetectType(fileBytes);
 
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
+Console.WriteLine("Name = " + fileTypeInfo.Name);
+Console.WriteLine("Extension = " + fileTypeInfo.FileType);
+Console.WriteLine("Mime Type = " + fileTypeInfo.MimeType);
+
+// The following output would be displayed:
+// Name = Portable Document Format File
+// Extension = pdf
+// Mime Type = application/pdf
+```
+
+Notice that `IFileTypeInterrogator` was assigned, meaning custom implementations are welcomed.  File definitions are provided in the source and will be regularly updated, feel free to submit an issue or pull request to add other signatures.  To quickly provide support for a new signature, create an instance of `CustomFileTypeInterrogator`:
+
+```
+IFileTypeInterrogator interrogator = new CustomFileTypeInterrogator("path_to_custom_definitions_file", Encoding.UTF8);
+
+FileTypeInfo fileTypeInfo = interrogator.DetectType(...);
+```
+
+It is best to create a single instance and manage it's lifetime through an IOC/DI Container.

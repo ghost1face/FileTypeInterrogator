@@ -2,10 +2,24 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard1.4;netstandard2.0</TargetFrameworks>
+    <PackageProjectUrl>https://github.com/ghost1face/FileTypeInterrogator</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ghost1face/FileTypeInterrogator</RepositoryUrl>
+    <PackageTags>file-type-detection file-types magic-numbers content-type mime-type</PackageTags>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <Authors>ghost1face</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageReleaseNotes>Update to use flat file definitions, unit tested</PackageReleaseNotes>
+    <Copyright>2019 @ BeyondTechIO</Copyright>
+    <Description>netstandard library for detecting file types by 'magic numbers', similar to the `file` command in Linux/Unix. Useful for validating file uploads instead of trusting file extensions.</Description>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="definitions_flat" />
+    <None Include="..\..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

@@ -62,6 +62,13 @@
         /// The additional identifier.
         /// </value>
         public byte[] SubHeader { get; private set; }
+
+        public override string ToString()
+        {
+            return $@"{Name} ({FileType})
+{MimeType}
+{string.Join("|", Alias ?? new string[] { })}";
+        }
     }
 
 }
