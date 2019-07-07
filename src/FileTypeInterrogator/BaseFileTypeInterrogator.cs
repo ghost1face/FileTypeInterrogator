@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace FileTypeInterrogator
 {
@@ -11,6 +12,9 @@ namespace FileTypeInterrogator
     public abstract class BaseFileTypeInterrogator : IFileTypeInterrogator
     {
         private readonly Lazy<IEnumerable<FileTypeInfo>> lazyFileTypes;
+        private readonly FileTypeInfo asciiFileType = new FileTypeInfo("ASCII Text", "txt", "text/plain", null);
+        private readonly FileTypeInfo utf8FileType = new FileTypeInfo("UTF-8 Text", "txt", "text/plain", null);
+        private readonly FileTypeInfo utf8FileTypeWithBOM = new FileTypeInfo("UTF-8 Text with BOM", "txt", "text/plain", null);
 
         /// <summary>
         /// Initializes a <see cref="BaseFileTypeInterrogator"/> with the provided json definition.
@@ -69,6 +73,12 @@ namespace FileTypeInterrogator
                     return fileTypeInfo;
             }
 
+            if (IsAscii(fileContent))
+                return asciiFileType;
+
+            if (IsUTF8(fileContent, out bool hasBOM))
+                return hasBOM ? utf8FileTypeWithBOM : utf8FileType;
+
             return null;
         }
 
@@ -106,6 +116,10 @@ namespace FileTypeInterrogator
                 if (IsMatchingType(fileContent, fileTypeInfo))
                     return true;
             }
+
+            if (extensionAliasOrMimeType.Equals("txt", StringComparison.OrdinalIgnoreCase) ||
+                extensionAliasOrMimeType.Equals("text/plain", StringComparison.OrdinalIgnoreCase))
+                return IsText(fileContent, out bool hasBOM);
 
             return false;
         }
@@ -209,6 +223,66 @@ namespace FileTypeInterrogator
             for (int i = 0; i < numberOfCharacters; i += 2)
                 byteArray[i / 2] = Convert.ToByte(hexString.Substring(i, 2), 16);
             return byteArray;
+        }
+
+        private bool IsText(byte[] input, out bool hasBOM)
+        {
+            hasBOM = false;
+
+            bool isAscii = IsAscii(input);
+
+            return isAscii ? true : IsUTF8(input, out hasBOM);
+        }
+
+        private bool IsAscii(byte[] input)
+        {
+            const byte maxAscii = 0x7F;
+            foreach (var b in input)
+            {
+                if (b > maxAscii)
+                    return false;
+            }
+            return true;
+        }
+
+        private bool IsUTF8(byte[] input, out bool hasBOM)
+        {
+            UTF8Encoding utf8WithBOM = new UTF8Encoding(true, true);
+            bool isUTF8 = true;
+            byte[] bom = utf8WithBOM.GetPreamble();
+            int bomLength = bom.Length;
+
+            hasBOM = false;
+
+            if (input.Length >= bomLength && bom.SequenceEqual(input.Take(bomLength)))
+            {
+                try
+                {
+                    utf8WithBOM.GetString(input, bomLength, input.Length - bomLength);
+                    hasBOM = true;
+                }
+                catch (ArgumentException)
+                {
+                    // not utf8 due to exception
+                    isUTF8 = false;
+                }
+            }
+
+            if (isUTF8 && !hasBOM)
+            {
+                UTF8Encoding utf8WithoutBOM = new UTF8Encoding(false, true);
+                try
+                {
+                    utf8WithoutBOM.GetString(input);
+                    isUTF8 = true;
+                }
+                catch (ArgumentException)
+                {
+                    isUTF8 = false;
+                }
+            }
+
+            return isUTF8;
         }
     }
 }

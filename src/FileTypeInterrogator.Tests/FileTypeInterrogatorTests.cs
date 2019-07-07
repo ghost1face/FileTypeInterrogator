@@ -8,6 +8,41 @@ namespace FileTypeInterrogator.Tests
 {
     public partial class FileTypeInterrogatorTests
     {
+        [TestMethod]
+        public void CanDetectAscii()
+        {
+            const string extension = "ascii";
+            DetectType(extension, result =>
+            {
+                Assert.IsNotNull(result);
+                Assert.IsTrue(result.Name.StartsWith(extension, StringComparison.OrdinalIgnoreCase));
+            });
+        }
+
+        [TestMethod]
+        public void CanDetectUTF8()
+        {
+            const string extension = "utf8";
+            DetectType(extension, result =>
+            {
+                Assert.IsNotNull(result);
+                Assert.IsTrue(result.Name.StartsWith("UTF-8", StringComparison.OrdinalIgnoreCase));
+                Assert.IsTrue(result.Name.IndexOf("BOM", StringComparison.OrdinalIgnoreCase) == -1);
+            });
+        }
+
+        [TestMethod]
+        public void CanDetectUTF8BOM()
+        {
+            const string extension = "utf8bom";
+            DetectType(extension, result =>
+            {
+                Assert.IsNotNull(result);
+                Assert.IsTrue(result.Name.StartsWith("UTF-8", StringComparison.OrdinalIgnoreCase));
+                Assert.IsTrue(result.Name.IndexOf("BOM", StringComparison.OrdinalIgnoreCase) > -1);
+            });
+        }
+
         [DataTestMethod]
         [DataRow("PDF", DisplayName = "PDF Test")]
         [DataRow("FDF", DisplayName = "FDF Test")]
@@ -19,6 +54,7 @@ namespace FileTypeInterrogator.Tests
         [DataTestMethod]
         [DataRow("BMP", DisplayName = "BMP Test")]
         [DataRow("GIF", DisplayName = "GIF Test")]
+        [DataRow("ICO", DisplayName = "ICO Test")]
         [DataRow("JP2", DisplayName = "JP2 Test")]
         [DataRow("JPG", DisplayName = "JPG Test")]
         [DataRow("PNG", DisplayName = "PNG Test")]
@@ -67,7 +103,7 @@ namespace FileTypeInterrogator.Tests
 
         [DataTestMethod]
         [DataRow("OTF", DisplayName = "OTF Test")]
-        [DataRow("TTF", DisplayName ="TTF Test")]
+        [DataRow("TTF", DisplayName = "TTF Test")]
         [DataRow("WOFF", DisplayName = "WOFF Test")]
         public void CanDetectFont(string extension)
         {
@@ -85,6 +121,17 @@ namespace FileTypeInterrogator.Tests
 
         private void DetectType(string extension)
         {
+            DetectType(extension, result =>
+            {
+                Assert.IsNotNull(result);
+                Assert.IsTrue(
+                    result.FileType.Equals(extension, StringComparison.OrdinalIgnoreCase) ||
+                    result.Alias?.Any(a => a.Equals(extension, StringComparison.OrdinalIgnoreCase)) == true);
+            });
+        }
+
+        private void DetectType(string extension, Action<FileTypeInfo> assertionValidator)
+        {
             var files = GetFilesByExtension(extension);
             foreach (var file in files)
             {
@@ -92,10 +139,7 @@ namespace FileTypeInterrogator.Tests
 
                 var result = fileTypeInterrogator.DetectType(fileContents);
 
-                Assert.IsNotNull(result);
-                Assert.IsTrue(
-                    result.FileType.Equals(extension, StringComparison.OrdinalIgnoreCase) ||
-                    result.Alias?.Any(a => a.Equals(extension, StringComparison.OrdinalIgnoreCase)) == true);
+                assertionValidator(result);
             }
         }
 
