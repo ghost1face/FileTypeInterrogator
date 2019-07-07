@@ -13,6 +13,7 @@
             Header = header;
             Offset = offset;
             AdditionalIdentifier = additionalIdentifier;
+            Alias = alias;
         }
 
         /// <summary>

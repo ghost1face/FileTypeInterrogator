@@ -16,8 +16,7 @@
   },
   "3gp": {
     "signs": [
-      "0,0000001466747970336770",
-      "0,0000002066747970336770"
+      "4,66747970336770"
     ],
     "mime": "video/3gpp",
     "name": "3GPP Multimedia File"
@@ -26,14 +25,8 @@
     "signs": [
       "0,377ABCAF271C"
     ],
-    "mime": "application/x-7z-compressed"
-  },
-  "ai": {
-    "signs": [
-      "0,25504446"
-    ],
-    "mime": "application/postscript",
-    "name": "Adobe Illustrator File"
+    "mime": "application/x-7z-compressed",
+    "name": "7-Zip Compressed File"
   },
   "aiff": {
     "signs": [
@@ -48,13 +41,6 @@
     ],
     "mime": "audio/AMR",
     "name": "Adaptive Multi-Rate Codec File"
-  },
-  "apr": {
-    "signs": [
-      "0,D0CF11E0A1B11AE1"
-    ],
-    "mime": "application/vnd.lotus-approach",
-    "name": "ArcView Project File"
   },
   "art": {
     "signs": [
@@ -200,7 +186,6 @@
     "signs": [
       "0,0D444F43",
       "0,CF11E0A1B11AE100",
-      "0,D0CF11E0A1B11AE1",
       "0,DBA52D00",
       "512,ECA5C100"
     ],
@@ -398,13 +383,6 @@
     "mime": "application/vnd.google-earth.kmz",
     "name": "Google Earth Placemark File"
   },
-  "koz": {
-    "signs": [
-      "0,49443303000000"
-    ],
-    "mime": "audio/vnd.audikoz",
-    "name": "Bell Music File"
-  },
   "kwd": {
     "signs": [
       "0,504B0304"
@@ -511,7 +489,6 @@
   },
   "mov": {
     "signs": [
-      "0,00",
       "0,000000146674797071742020",
       "4,6674797071742020",
       "4,6D6F6F76"
@@ -679,7 +656,10 @@
   },
   "pdf": {
     "signs": [
-      "0,25504446"
+      "0,25504446,0A2525454F46",
+      "0,25504446,0A2525454F460A",
+      "0,25504446,0D0A2525454F460D0A",
+      "0,25504446,0D2525454F460D"
     ],
     "mime": "application/pdf",
     "name": "Portable Document Format File"
@@ -717,8 +697,9 @@
       "512,006E1EF0",
       "512,0F00E803",
       "512,A0461DF0",
-      "0,D0CF11E0A1B11AE1",
-      "512,FDFFFFFF04"
+      "0,D0CF11E0A1B11AE1,506F776572506F696E74",
+      "512,FDFFFFFF04",
+      "512,FDFFFFFF00000000"
     ],
     "mime": "application/vnd.ms-powerpoint",
     "name": "PowerPoint Presentation"
@@ -926,12 +907,6 @@
     "mime": "text/vnd.trolltech.linguist",
     "name": "TypeScript File"
   },
-  "tsa": {
-    "signs": [
-      "0,47"
-    ],
-    "mime": "application/tamp-sequence-adjust"
-  },
   "tsv": {
     "signs": [
       "0,47"
@@ -1113,7 +1088,7 @@
       "0,504B0708",
       "30,504B4C495445",
       "526,504B537058",
-      "29,152,57696E5A6970"
+      "29152,57696E5A6970"
     ],
     "mime": "application/zip",
     "name": "Zipped File"

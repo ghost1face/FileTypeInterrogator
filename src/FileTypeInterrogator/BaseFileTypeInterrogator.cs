@@ -40,8 +40,7 @@ namespace FileTypeInterrogator
             if (inputStream.CanSeek)
                 inputStream.Position = 0;
 
-            // read smallest of 4kb or file length
-            byte[] byteBuffer = new byte[Math.Min(inputStream.Length, 4096)];
+            byte[] byteBuffer = new byte[inputStream.Length];
             inputStream.Read(byteBuffer, 0, byteBuffer.Length);
 
             if (inputStream.CanSeek)
@@ -167,6 +166,7 @@ namespace FileTypeInterrogator
         private static IEnumerable<FileTypeInfo> LoadFileTypes(string jsonData)
         {
             var fileTypeInfos = new List<FileTypeInfo>();
+            var split = new[] { ',' };
             var jsonValue = JsonValue.Parse(jsonData);
             var jsonObject = jsonValue as JsonObject;
 
@@ -176,24 +176,32 @@ namespace FileTypeInterrogator
                     continue;
 
                 var fileTypeInfoObject = fileTypeInfo as JsonObject;
-                var signatures = fileTypeInfoObject["signs"].Cast<string>();
+                var signatures = ((JsonArray)fileTypeInfoObject["signs"]).Select(sign => (string)sign);
                 var mimeType = (string)fileTypeInfoObject["mime"];
                 var name = (string)fileTypeInfoObject["name"];
 
                 string[] alias = null;
                 if (fileTypeInfoObject.TryGetValue("alias", out JsonValue aliasArray))
-                    alias = aliasArray.Cast<string>().ToArray();
+                    alias = ((JsonArray)aliasArray).Select(al => (string)al).ToArray();
 
                 foreach (var signature in signatures)
                 {
-                    var sigParts = signature.Split(',');
+                    var sigParts = signature.Split(split, StringSplitOptions.RemoveEmptyEntries);
 
                     var offset = int.Parse(sigParts[0]);
                     byte[] sigHeader = HexStringToByteArray(sigParts[1]);
                     byte[] sigAdditional = null;
 
                     fileTypeInfos.Add(
-                        new FileTypeInfo(name, fileExtension, mimeType, header: sigHeader, offset: offset, additionalIdentifier: sigAdditional)
+                        new FileTypeInfo(
+                            name,
+                            fileExtension,
+                            mimeType,
+                            header: sigHeader,
+                            alias: alias,
+                            offset: offset,
+                            additionalIdentifier: sigAdditional
+                        )
                     );
                 }
             }
