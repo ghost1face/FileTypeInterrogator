@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Json;
 using System.Linq;
 
 namespace FileTypeInterrogator
@@ -19,7 +18,7 @@ namespace FileTypeInterrogator
         /// <param name="jsonDefinition">The json definition file.</param>
         internal BaseFileTypeInterrogator(string jsonDefinition)
         {
-            lazyFileTypes = new Lazy<IEnumerable<FileTypeInfo>>(() => LoadFileTypes(jsonDefinition));
+            lazyFileTypes = new Lazy<IEnumerable<FileTypeInfo>>(() => LoadFileTypes(jsonDefinition).ToList());
         }
 
         /// <summary>
@@ -95,11 +94,14 @@ namespace FileTypeInterrogator
         /// Determines if the file contents are of a specified type.
         /// </summary>
         /// <param name="fileContent">The file contents to examine.</param>
-        /// <param name="fileType">The file type to validate.</param>
+        /// <param name="extensionAliasOrMimeType">The file type to validate.</param>
         /// <returns></returns>
-        public bool IsType(byte[] fileContent, string fileType)
+        public bool IsType(byte[] fileContent, string extensionAliasOrMimeType)
         {
-            foreach (var fileTypeInfo in AvailableTypes.Where(t => t.FileType.Equals(fileType, StringComparison.OrdinalIgnoreCase)))
+            foreach (var fileTypeInfo in AvailableTypes.Where(t =>
+                t.FileType.Equals(extensionAliasOrMimeType, StringComparison.OrdinalIgnoreCase) ||
+                t.MimeType.Equals(extensionAliasOrMimeType, StringComparison.OrdinalIgnoreCase) ||
+                (t.Alias != null && t.Alias.Contains(extensionAliasOrMimeType, StringComparer.OrdinalIgnoreCase))))
             {
                 if (IsMatchingType(fileContent, fileTypeInfo))
                     return true;
@@ -115,20 +117,20 @@ namespace FileTypeInterrogator
 
             // some file types have the same header
             // but different signature in another location, if its one of these determine what the true file type is
-            if (isMatch && type.AdditionalIdentifier != null)
+            if (isMatch && type.SubHeader != null)
             {
                 // find all indices of matching the 1st byte of the additional sequence
                 var matchingIndices = new List<int>();
                 for (int i = 0; i < input.Count; i++)
                 {
-                    if (input[i] == type.AdditionalIdentifier[0])
+                    if (input[i] == type.SubHeader[0])
                         matchingIndices.Add(i);
                 }
 
                 // investigate all of them for a match
                 foreach (int potentialMatchingIndex in matchingIndices)
                 {
-                    isMatch = FindMatch(input, type.AdditionalIdentifier, potentialMatchingIndex);
+                    isMatch = FindMatch(input, type.SubHeader, potentialMatchingIndex);
 
                     if (isMatch)
                         break;
@@ -141,7 +143,7 @@ namespace FileTypeInterrogator
         private static bool FindMatch(IList<byte> input, IList<byte> searchArray, int offset = 0)
         {
             // file isn't long enough to even search the proper index, not a match
-            if (input.Count < offset)
+            if (input.Count <= offset)
                 return false;
 
             int matchingCount = 0;
@@ -149,6 +151,9 @@ namespace FileTypeInterrogator
             {
                 // set the offset location
                 var calculatedOffset = i + offset;
+
+                if (input.Count <= calculatedOffset)
+                    break;
 
                 // if file offset is not set to zero, we need to take this into account when comparing.
                 // if byte in searchArray is set to null, means this byte is variable, ignore it
@@ -163,50 +168,38 @@ namespace FileTypeInterrogator
             return matchingCount == searchArray.Count;
         }
 
-        private static IEnumerable<FileTypeInfo> LoadFileTypes(string jsonData)
+        private static IEnumerable<FileTypeInfo> LoadFileTypes(string flatFileData)
         {
-            var fileTypeInfos = new List<FileTypeInfo>();
-            var split = new[] { ',' };
-            var jsonValue = JsonValue.Parse(jsonData);
-            var jsonObject = jsonValue as JsonObject;
-
-            foreach (var fileExtension in jsonObject.Keys)
+            using (var stringReader = new StringReader(flatFileData))
             {
-                if (!jsonObject.TryGetValue(fileExtension, out JsonValue fileTypeInfo))
-                    continue;
-
-                var fileTypeInfoObject = fileTypeInfo as JsonObject;
-                var signatures = ((JsonArray)fileTypeInfoObject["signs"]).Select(sign => (string)sign);
-                var mimeType = (string)fileTypeInfoObject["mime"];
-                var name = (string)fileTypeInfoObject["name"];
-
-                string[] alias = null;
-                if (fileTypeInfoObject.TryGetValue("alias", out JsonValue aliasArray))
-                    alias = ((JsonArray)aliasArray).Select(al => (string)al).ToArray();
-
-                foreach (var signature in signatures)
+                string line = null;
+                while ((line = stringReader.ReadLine()) != null)
                 {
-                    var sigParts = signature.Split(split, StringSplitOptions.RemoveEmptyEntries);
+                    var segments = line.Split('\t');
+                    int offset = int.Parse(segments[0]);
+                    // segment[1] = type
+                    string signature = segments[2];
+                    string additional = segments[3];
+                    string name = segments[4];
+                    string extension = segments[5];
+                    string mimeType = segments[6];
+                    string alias = segments.Length == 8 ? segments[7] : null;
 
-                    var offset = int.Parse(sigParts[0]);
-                    byte[] sigHeader = HexStringToByteArray(sigParts[1]);
-                    byte[] sigAdditional = null;
+                    byte[] sigBytes = HexStringToByteArray(signature);
+                    byte[] additionalBytes = string.IsNullOrWhiteSpace(additional) ? null : HexStringToByteArray(additional);
+                    string[] aliases = string.IsNullOrWhiteSpace(alias) ? null : alias.Split('|');
 
-                    fileTypeInfos.Add(
-                        new FileTypeInfo(
-                            name,
-                            fileExtension,
-                            mimeType,
-                            header: sigHeader,
-                            alias: alias,
-                            offset: offset,
-                            additionalIdentifier: sigAdditional
-                        )
+                    yield return new FileTypeInfo(
+                        name,
+                        extension,
+                        mimeType,
+                        header: sigBytes,
+                        alias: aliases,
+                        offset: offset,
+                        subHeader: additionalBytes
                     );
                 }
             }
-
-            return fileTypeInfos;
         }
 
         private static byte[] HexStringToByteArray(string hexString)

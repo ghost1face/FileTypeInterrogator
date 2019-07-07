@@ -1,19 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.4</TargetFramework>
+    <TargetFrameworks>netstandard1.4;netstandard2.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="definitions.json" />
+    <None Remove="definitions_flat" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="definitions.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.Json" Version="4.5.0" />
+    <EmbeddedResource Include="definitions_flat" />
   </ItemGroup>
 
   <ItemGroup>

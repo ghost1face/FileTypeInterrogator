@@ -20,7 +20,7 @@ namespace FileTypeInterrogator.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -62,31 +62,7 @@ namespace FileTypeInterrogator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {
-        ///  &quot;123&quot;: {
-        ///    &quot;signs&quot;: [
-        ///      &quot;0,00001A00051004&quot;
-        ///    ],
-        ///    &quot;mime&quot;: &quot;application/vnd.lotus-1-2-3&quot;,
-        ///    &quot;name&quot;: &quot;Lotus 1-2-3 Spreadsheet&quot;
-        ///  },
-        ///  &quot;3g2&quot;: {
-        ///    &quot;signs&quot;: [
-        ///      &quot;0,0000001466747970336770&quot;,
-        ///      &quot;0,0000002066747970336770&quot;
-        ///    ],
-        ///    &quot;mime&quot;: &quot;video/3gpp2&quot;,
-        ///    &quot;name&quot;: &quot;3GPP2 Multimedia File&quot;
-        ///  },
-        ///  &quot;3gp&quot;: {
-        ///    &quot;signs&quot;: [
-        ///      &quot;0,0000001466747970336770&quot;,
-        ///      &quot;0,0000002066747970336770&quot;
-        ///    ],
-        ///    &quot;mime&quot;: &quot;video/3gpp&quot;,
-        ///    &quot;name&quot;: &quot;3GPP Multimedia File&quot;
-        ///  },
-        ///  &quot;7z&quot;:  [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to 0	long	D0CF11E0A1B11AE1	FDFFFFFF22	Excel Spreadsheet	xls	application/vnd.ms-excel	        ///0	long	D0CF11E0A1B11AE1	FDFFFFFF23	Excel Spreadsheet	xls	application/vnd.ms-excel        ///0	long	D0CF11E0A1B11AE1	FDFFFFFF28	Excel Spreadsheet	xls	application/vnd.ms-excel	        ///0	long	D0CF11E0A1B11AE1	FDFFFFFF29	Excel Spreadsheet	xls	application/vnd.ms-excel	        ///0	long	D0CF11E0A1B11AE1	FDFFFFFF04	Excel Spreadsheet	xls	application/vnd.ms-excel	        ///0	long	D0CF11E0A1B11AE1	FDFFFFFF10	Excel Spreadsheet	xls	application/vnd.ms-excel	        ///512	long	FDFFFF [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string definitions {
             get {

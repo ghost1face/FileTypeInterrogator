@@ -5,14 +5,14 @@
     /// </summary>
     public class FileTypeInfo
     {
-        internal FileTypeInfo(string name, string fileType, string mimeType, byte[] header, string[] alias = null, int offset = 0, byte[] additionalIdentifier = null)
+        internal FileTypeInfo(string name, string fileType, string mimeType, byte[] header, string[] alias = null, int offset = 0, byte[] subHeader = null)
         {
             Name = name;
             MimeType = mimeType;
             FileType = fileType;
             Header = header;
             Offset = offset;
-            AdditionalIdentifier = additionalIdentifier;
+            SubHeader = subHeader;
             Alias = alias;
         }
 
@@ -61,7 +61,7 @@
         /// <value>
         /// The additional identifier.
         /// </value>
-        public byte[] AdditionalIdentifier { get; private set; }
+        public byte[] SubHeader { get; private set; }
     }
 
 }

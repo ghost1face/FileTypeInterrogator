@@ -17,17 +17,17 @@ namespace FileTypeInterrogator.Tests
         }
 
         [DataTestMethod]
-        //[DataRow("3GP", DisplayName = "3GP Test")]
-        //[DataRow("7Z", DisplayName = "7Z Test")]
-        //[DataRow("BMP", DisplayName = "BMP Test")]
-        //[DataRow("DOC", DisplayName = "DOC Test")]
-        //[DataRow("GIF", DisplayName = "GIF Test")]
-        //[DataRow("JP2", DisplayName = "JP2 Test")]
-        //[DataRow("JPG", DisplayName = "JPG Test")]
-        //[DataRow("MP3", DisplayName = "MP3 Test")]
-        //[DataRow("MP4", DisplayName = "MP4 Test")]
-        //[DataRow("PDF", DisplayName = "PDF Test")]
-        //[DataRow("PNG", DisplayName = "PNG Test")]
+        [DataRow("3GP", DisplayName = "3GP Test")]
+        [DataRow("7Z", DisplayName = "7Z Test")]
+        [DataRow("BMP", DisplayName = "BMP Test")]
+        [DataRow("DOC", DisplayName = "DOC Test")]
+        [DataRow("GIF", DisplayName = "GIF Test")]
+        [DataRow("JP2", DisplayName = "JP2 Test")]
+        [DataRow("JPG", DisplayName = "JPG Test")]
+        [DataRow("MP3", DisplayName = "MP3 Test")]
+        [DataRow("MP4", DisplayName = "MP4 Test")]
+        [DataRow("PDF", DisplayName = "PDF Test")]
+        [DataRow("PNG", DisplayName = "PNG Test")]
         [DataRow("PPT", DisplayName = "PPT Test")]
         [DataRow("PPTX", DisplayName = "PPTX Test")]
         [DataRow("PSD", DisplayName = "PSD Test")]
@@ -47,6 +47,40 @@ namespace FileTypeInterrogator.Tests
                 result.FileType.Equals(fileType, StringComparison.OrdinalIgnoreCase) ||
                 result.Alias?.Any(a => a.Equals(fileType, StringComparison.OrdinalIgnoreCase)) == true);
         }
+
+        [TestMethod]
+        public void CanDetectAlias_Jpg()
+        {
+            var filePath = GetFileByType("JPG");
+            var fileContents = File.ReadAllBytes(filePath);
+
+            var result = fileTypeInterrogator.IsType(fileContents, "jpg");
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void CanDetectAlias_Jpeg()
+        {
+            var filePath = GetFileByType("JPG");
+            var fileContents = File.ReadAllBytes(filePath);
+
+            var result = fileTypeInterrogator.IsType(fileContents, "jpeg");
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void CanDetectJpg_By_MimeType()
+        {
+            var filePath = GetFileByType("JPG");
+            var fileContents = File.ReadAllBytes(filePath);
+
+            var result = fileTypeInterrogator.IsType(fileContents, "image/jpeg");
+
+            Assert.IsTrue(result);
+        }
+
 
         private string GetFileByType(string type)
         {
