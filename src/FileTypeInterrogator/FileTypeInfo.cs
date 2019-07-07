@@ -1,19 +1,18 @@
-﻿
-namespace FileTypeInterrogator
+﻿namespace FileTypeInterrogator
 {
     /// <summary>
-    /// Class that identifies characteristics of a specific filetype, namely the name of the type, extensions of the same filetype, header signature, etc.
+    /// Information regarding the file type, including name, extension, mime type and signature.
     /// </summary>
     public class FileTypeInfo
     {
-        internal FileTypeInfo(string name, FileType fileType, string mimeType, byte?[] header, int offset = 0, byte?[] additionalIdentifier = null)
+        internal FileTypeInfo(string name, string fileType, string mimeType, byte[] header, string[] alias = null, int offset = 0, byte[] additionalIdentifier = null)
         {
             Name = name;
             MimeType = mimeType;
             FileType = fileType;
             Header = header;
             Offset = offset;
-            AdditionalIdentifier = additionalIdentifier ?? new byte?[0];
+            AdditionalIdentifier = additionalIdentifier;
         }
 
         /// <summary>
@@ -25,12 +24,9 @@ namespace FileTypeInterrogator
         public string Name { get; private set; }
 
         /// <summary>
-        /// Gets the <see cref="FileType" /> extension which is related to this type
+        /// Gets the extension which is related to this type
         /// </summary>
-        /// <value>
-        /// The supported types.
-        /// </value>
-        public FileType FileType { get; private set; }
+        public string FileType { get; private set; }
 
         /// <summary>
         /// Gets the MimeType of this type
@@ -38,12 +34,17 @@ namespace FileTypeInterrogator
         public string MimeType { get; private set; }
 
         /// <summary>
+        /// Other names for this file type
+        /// </summary>
+        public string[] Alias { get; private set; }
+
+        /// <summary>
         /// Gets unique header 'Magic Numbers' to identifiy this file type
         /// </summary>
         /// <value>
         /// The header.
         /// </value>
-        public byte?[] Header { get; private set; }
+        public byte[] Header { get; private set; }
 
         /// <summary>
         /// Gets the offset location of the Header details
@@ -59,6 +60,7 @@ namespace FileTypeInterrogator
         /// <value>
         /// The additional identifier.
         /// </value>
-        public byte?[] AdditionalIdentifier { get; private set; }
+        public byte[] AdditionalIdentifier { get; private set; }
     }
+
 }
