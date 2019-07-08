@@ -2,6 +2,8 @@
 
 netstandard library for detecting file types by 'magic numbers', similar to the `file` command in Linux/Unix. Useful for validating file uploads instead of trusting file extensions.
 
+[![NuGet](https://img.shields.io/nuget/v/FileTypeInterrogator.svg?style=flat-square&label=nuget)](https://www.nuget.org/packages/FileTypeInterrogator/)
+
 # Usage
 
 ```
