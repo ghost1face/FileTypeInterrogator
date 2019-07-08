@@ -273,7 +273,7 @@ namespace FileTypeInterrogator
                 UTF8Encoding utf8WithoutBOM = new UTF8Encoding(false, true);
                 try
                 {
-                    utf8WithoutBOM.GetString(input);
+                    utf8WithoutBOM.GetString(input, 0, input.Length);
                     isUTF8 = true;
                 }
                 catch (ArgumentException)
