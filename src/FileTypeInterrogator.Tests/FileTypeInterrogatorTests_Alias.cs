@@ -11,7 +11,7 @@ namespace FileTypeInterrogator.Tests
         [TestInitialize]
         public void Init()
         {
-            fileTypeInterrogator = new FileTypeInterrogator();
+            fileTypeInterrogator = new FileInterrogator();
         }
 
         [TestMethod]

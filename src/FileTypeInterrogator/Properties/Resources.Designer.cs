@@ -69,5 +69,14 @@ namespace FileTypeInterrogator.Properties {
                 return ResourceManager.GetString("definitions", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Input must not be empty..
+        /// </summary>
+        internal static string EMPTY_INPUT_EXCEPTION {
+            get {
+                return ResourceManager.GetString("EMPTY_INPUT_EXCEPTION", resourceCulture);
+            }
+        }
     }
 }

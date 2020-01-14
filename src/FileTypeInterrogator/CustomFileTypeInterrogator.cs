@@ -31,9 +31,18 @@ namespace FileTypeInterrogator
         /// Initializes a <see cref="CustomFileTypeInterrogator"/> with the definitions from the provided stream.
         /// </summary>
         /// <param name="definitionStream">Definitions stream.</param>
-        public CustomFileTypeInterrogator(Stream definitionStream) : base(new StreamReader(definitionStream).ReadToEnd())
+        public CustomFileTypeInterrogator(Stream definitionStream)
+            : base(ReadStream(definitionStream))
         {
 
+        }
+
+        private static string ReadStream(Stream inputStream)
+        {
+            using (var reader = new StreamReader(inputStream))
+            {
+                return reader.ReadToEnd();
+            }
         }
     }
 

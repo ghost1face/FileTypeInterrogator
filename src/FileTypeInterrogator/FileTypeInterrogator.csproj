@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.3;</TargetFrameworks>
+    <TargetFrameworks>netstandard1.3;netstandard2.1</TargetFrameworks>
     <PackageProjectUrl>https://github.com/ghost1face/FileTypeInterrogator</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ghost1face/FileTypeInterrogator</RepositoryUrl>
     <PackageTags>file-type-detection file-types magic-numbers content-type mime-type</PackageTags>
@@ -12,6 +12,8 @@
     <PackageReleaseNotes>Update to use flat file definitions, unit tested</PackageReleaseNotes>
     <Copyright>2019 @ BeyondTechIO</Copyright>
     <Description>netstandard library for detecting file types by 'magic numbers', similar to the `file` command in Linux/Unix. Useful for validating file uploads instead of trusting file extensions.</Description>
+    <NeutralLanguage>en</NeutralLanguage>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,6 +26,13 @@
 
   <ItemGroup>
     <EmbeddedResource Include="definitions_flat" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

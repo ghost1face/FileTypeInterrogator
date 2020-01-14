@@ -121,4 +121,7 @@
   <data name="definitions" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\definitions_flat;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="EMPTY_INPUT_EXCEPTION" xml:space="preserve">
+    <value>Input must not be empty.</value>
+  </data>
 </root>

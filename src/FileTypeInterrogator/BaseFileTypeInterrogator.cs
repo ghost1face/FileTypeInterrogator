@@ -1,5 +1,7 @@
-﻿using System;
+﻿using FileTypeInterrogator.Properties;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,10 +21,10 @@ namespace FileTypeInterrogator
         /// <summary>
         /// Initializes a <see cref="BaseFileTypeInterrogator"/> with the provided json definition.
         /// </summary>
-        /// <param name="jsonDefinition">The json definition file.</param>
-        internal BaseFileTypeInterrogator(string jsonDefinition)
+        /// <param name="flatFileDefinition">The definition file.</param>
+        internal BaseFileTypeInterrogator(string flatFileDefinition)
         {
-            lazyFileTypes = new Lazy<IEnumerable<FileTypeInfo>>(() => LoadFileTypes(jsonDefinition).ToList());
+            lazyFileTypes = new Lazy<IEnumerable<FileTypeInfo>>(() => LoadFileTypes(flatFileDefinition).ToList());
         }
 
         /// <summary>
@@ -63,7 +65,7 @@ namespace FileTypeInterrogator
                 throw new ArgumentNullException(nameof(fileContent));
 
             if (fileContent.Length == 0)
-                throw new ArgumentException("input must not be empty");
+                throw new ArgumentException(Resources.EMPTY_INPUT_EXCEPTION);
 
             // iterate over each type and determine if we have a match based on file signature.
             foreach (var fileTypeInfo in AvailableTypes)
@@ -108,6 +110,12 @@ namespace FileTypeInterrogator
         /// <returns></returns>
         public bool IsType(byte[] fileContent, string extensionAliasOrMimeType)
         {
+            if (fileContent == null)
+                throw new ArgumentNullException(nameof(fileContent));
+
+            if (string.IsNullOrWhiteSpace(extensionAliasOrMimeType))
+                throw new ArgumentNullException(nameof(extensionAliasOrMimeType));
+
             foreach (var fileTypeInfo in AvailableTypes.Where(t =>
                 t.FileType.Equals(extensionAliasOrMimeType, StringComparison.OrdinalIgnoreCase) ||
                 t.MimeType.Equals(extensionAliasOrMimeType, StringComparison.OrdinalIgnoreCase) ||
@@ -190,7 +198,7 @@ namespace FileTypeInterrogator
                 while ((line = stringReader.ReadLine()) != null)
                 {
                     var segments = line.Split('\t');
-                    int offset = int.Parse(segments[0]);
+                    int offset = int.Parse(segments[0], NumberStyles.Integer, CultureInfo.InvariantCulture);
                     // segment[1] = type
                     string signature = segments[2];
                     string additional = segments[3];
@@ -234,7 +242,7 @@ namespace FileTypeInterrogator
             return isAscii ? true : IsUTF8(input, out hasBOM);
         }
 
-        private bool IsAscii(byte[] input)
+        private static bool IsAscii(byte[] input)
         {
             const byte maxAscii = 0x7F;
             foreach (var b in input)
@@ -245,7 +253,7 @@ namespace FileTypeInterrogator
             return true;
         }
 
-        private bool IsUTF8(byte[] input, out bool hasBOM)
+        private static bool IsUTF8(byte[] input, out bool hasBOM)
         {
             UTF8Encoding utf8WithBOM = new UTF8Encoding(true, true);
             bool isUTF8 = true;

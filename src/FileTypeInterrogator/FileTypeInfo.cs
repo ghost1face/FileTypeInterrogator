@@ -1,4 +1,7 @@
-﻿namespace FileTypeInterrogator
+﻿using System;
+using System.Collections.Generic;
+
+namespace FileTypeInterrogator
 {
     /// <summary>
     /// Information regarding the file type, including name, extension, mime type and signature.
@@ -37,7 +40,7 @@
         /// <summary>
         /// Other names for this file type
         /// </summary>
-        public string[] Alias { get; private set; }
+        public IEnumerable<string> Alias { get; private set; }
 
         /// <summary>
         /// Gets unique header 'Magic Numbers' to identifiy this file type
@@ -45,7 +48,7 @@
         /// <value>
         /// The header.
         /// </value>
-        public byte[] Header { get; private set; }
+        internal byte[] Header { get; private set; }
 
         /// <summary>
         /// Gets the offset location of the Header details
@@ -53,7 +56,7 @@
         /// <value>
         /// The offset.
         /// </value>
-        public int Offset { get; private set; }
+        internal int Offset { get; private set; }
 
         /// <summary>
         /// Gets the additional identifier to guarantee uniqueness of the file type
@@ -61,13 +64,13 @@
         /// <value>
         /// The additional identifier.
         /// </value>
-        public byte[] SubHeader { get; private set; }
+        internal byte[] SubHeader { get; private set; }
 
         public override string ToString()
         {
             return $@"{Name} ({FileType})
 {MimeType}
-{string.Join("|", Alias ?? new string[] { })}";
+{string.Join("|", Alias ?? Array.Empty<string>())}";
         }
     }
 
