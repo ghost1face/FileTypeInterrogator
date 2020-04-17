@@ -6,7 +6,7 @@ namespace FileTypeInterrogator.Tests
     [TestClass]
     public partial class FileTypeInterrogatorTests
     {
-        private IFileTypeInterrogator fileTypeInterrogator;
+        private IFileInterrogator fileTypeInterrogator;
 
         [TestInitialize]
         public void Init()

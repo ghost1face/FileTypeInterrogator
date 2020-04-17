@@ -6,7 +6,7 @@ namespace FileTypeInterrogator
     /// <summary>
     /// Wrapper for creating an instance of <see cref="BaseFileTypeInterrogator" /> with the provided definitions.
     /// </summary>
-    public class CustomFileTypeInterrogator : BaseFileTypeInterrogator, IFileTypeInterrogator
+    public class CustomFileTypeInterrogator : BaseFileTypeInterrogator, IFileInterrogator
     {
         /// <summary>
         /// Initializes a <see cref="CustomFileTypeInterrogator"/> with the provided definitions file contents.
