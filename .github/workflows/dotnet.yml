@@ -20,6 +20,7 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ matrix.dotnet }}
+      run: dotnet --list-sdks
     - name: Restore dependencies
       working-directory: ./src
       run: dotnet restore
