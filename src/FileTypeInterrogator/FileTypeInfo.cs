@@ -1,4 +1,6 @@
-﻿namespace FileTypeInterrogator
+﻿using System;
+
+namespace FileTypeInterrogator
 {
     /// <summary>
     /// Information regarding the file type, including name, extension, mime type and signature.
@@ -63,11 +65,12 @@
         /// </value>
         public byte[] SubHeader { get; private set; }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             return $@"{Name} ({FileType})
 {MimeType}
-{string.Join("|", Alias ?? new string[] { })}";
+{string.Join("|", Alias ?? Array.Empty<string>())}";
         }
     }
 

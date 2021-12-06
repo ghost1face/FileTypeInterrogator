@@ -225,16 +225,16 @@ namespace FileTypeInterrogator
             return byteArray;
         }
 
-        private bool IsText(byte[] input, out bool hasBOM)
+        private static bool IsText(byte[] input, out bool hasBOM)
         {
             hasBOM = false;
 
             bool isAscii = IsAscii(input);
 
-            return isAscii ? true : IsUTF8(input, out hasBOM);
+            return isAscii || IsUTF8(input, out hasBOM);
         }
 
-        private bool IsAscii(byte[] input)
+        private static bool IsAscii(byte[] input)
         {
             const byte maxAscii = 0x7F;
             foreach (var b in input)
@@ -245,7 +245,7 @@ namespace FileTypeInterrogator
             return true;
         }
 
-        private bool IsUTF8(byte[] input, out bool hasBOM)
+        private static bool IsUTF8(byte[] input, out bool hasBOM)
         {
             UTF8Encoding utf8WithBOM = new UTF8Encoding(true, true);
             bool isUTF8 = true;
