@@ -44,76 +44,76 @@ namespace FileTypeInterrogator.Tests
         }
 
         [DataTestMethod]
-        [DataRow("PDF", DisplayName = "PDF Test")]
-        [DataRow("FDF", DisplayName = "FDF Test")]
+        [DataRow("pdf", DisplayName = "PDF Test")]
+        [DataRow("fdf", DisplayName = "FDF Test")]
         public void CanDetectAdobe(string extension)
         {
             DetectType(extension);
         }
 
         [DataTestMethod]
-        [DataRow("BMP", DisplayName = "BMP Test")]
-        [DataRow("GIF", DisplayName = "GIF Test")]
-        [DataRow("ICO", DisplayName = "ICO Test")]
-        [DataRow("JP2", DisplayName = "JP2 Test")]
-        [DataRow("JPG", DisplayName = "JPG Test")]
-        [DataRow("PNG", DisplayName = "PNG Test")]
-        [DataRow("PSD", DisplayName = "PSD Test")]
-        [DataRow("TIF", DisplayName = "TIF Test")]
+        [DataRow("bmp", DisplayName = "BMP Test")]
+        [DataRow("gif", DisplayName = "GIF Test")]
+        [DataRow("ico", DisplayName = "ICO Test")]
+        [DataRow("jp2", DisplayName = "JP2 Test")]
+        [DataRow("jpg", DisplayName = "JPG Test")]
+        [DataRow("png", DisplayName = "PNG Test")]
+        [DataRow("psd", DisplayName = "PSD Test")]
+        [DataRow("tif", DisplayName = "TIF Test")]
         public void CanDetectImages(string extension)
         {
             DetectType(extension);
         }
 
         [DataTestMethod]
-        [DataRow("3GP", DisplayName = "3GP Test")]
-        [DataRow("AVI", DisplayName = "AVI Test")]
-        [DataRow("FLV", DisplayName = "FLV Test")]
-        [DataRow("MID", DisplayName = "MID Test")]
-        [DataRow("MP4", DisplayName = "MP4 Test")]
-        [DataRow("WMV", DisplayName = "WMV Test")]
+        [DataRow("3gp", DisplayName = "3GP Test")]
+        [DataRow("avi", DisplayName = "AVI Test")]
+        [DataRow("flv", DisplayName = "FLV Test")]
+        [DataRow("mid", DisplayName = "MID Test")]
+        [DataRow("mp4", DisplayName = "MP4 Test")]
+        [DataRow("wmv", DisplayName = "WMV Test")]
         public void CanDetectVideo(string extension)
         {
             DetectType(extension);
         }
 
         [DataTestMethod]
-        [DataRow("AC3", DisplayName = "AC3 Test")]
-        [DataRow("AIFF", DisplayName = "AIFF Test")]
-        [DataRow("FLAC", DisplayName = "FLAC Test")]
-        [DataRow("MP3", DisplayName = "MP3 Test")]
-        [DataRow("OGG", DisplayName = "OGG Test")]
-        [DataRow("RA", DisplayName = "RA Test")]
+        [DataRow("ac3", DisplayName = "AC3 Test")]
+        [DataRow("aiff", DisplayName = "AIFF Test")]
+        [DataRow("flac", DisplayName = "FLAC Test")]
+        [DataRow("mp3", DisplayName = "MP3 Test")]
+        [DataRow("ogg", DisplayName = "OGG Test")]
+        [DataRow("ra", DisplayName = "RA Test")]
         public void CanDetectAudio(string extension)
         {
             DetectType(extension);
         }
 
         [DataTestMethod]
-        [DataRow("DOC", DisplayName = "DOC Test")]
-        [DataRow("DOCX", DisplayName = "DOC Test")]
-        [DataRow("PPT", DisplayName = "PPT Test")]
-        [DataRow("PPTX", DisplayName = "PPTX Test")]
-        [DataRow("XLS", DisplayName = "XLS Test")]
-        [DataRow("XLSX", DisplayName = "XLSX Test")]
+        [DataRow("doc", DisplayName = "DOC Test")]
+        [DataRow("docx", DisplayName = "DOC Test")]
+        [DataRow("ppt", DisplayName = "PPT Test")]
+        [DataRow("pptx", DisplayName = "PPTX Test")]
+        [DataRow("xls", DisplayName = "XLS Test")]
+        [DataRow("xlsx", DisplayName = "XLSX Test")]
         public void CanDetectOffice(string extension)
         {
             DetectType(extension);
         }
 
         [DataTestMethod]
-        [DataRow("OTF", DisplayName = "OTF Test")]
-        [DataRow("TTF", DisplayName = "TTF Test")]
-        [DataRow("WOFF", DisplayName = "WOFF Test")]
+        [DataRow("otf", DisplayName = "OTF Test")]
+        [DataRow("ttf", DisplayName = "TTF Test")]
+        [DataRow("woff", DisplayName = "WOFF Test")]
         public void CanDetectFont(string extension)
         {
             DetectType(extension);
         }
 
         [DataTestMethod]
-        [DataRow("7Z", DisplayName = "7Z Test")]
-        [DataRow("RAR", DisplayName = "RAR Test")]
-        [DataRow("ZIP", DisplayName = "ZIP Test")]
+        [DataRow("7z", DisplayName = "7Z Test")]
+        [DataRow("rar", DisplayName = "RAR Test")]
+        [DataRow("zip", DisplayName = "ZIP Test")]
         public void CanDetectCompressed(string extension)
         {
             DetectType(extension);
