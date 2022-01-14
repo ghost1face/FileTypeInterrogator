@@ -58,9 +58,11 @@ namespace FileTypeInterrogator.Tests
         [DataRow("ico", DisplayName = "ICO Test")]
         [DataRow("jp2", DisplayName = "JP2 Test")]
         [DataRow("jpg", DisplayName = "JPG Test")]
+        [DataRow("pcx", DisplayName = "PCX Test")]
         [DataRow("png", DisplayName = "PNG Test")]
         [DataRow("psd", DisplayName = "PSD Test")]
         [DataRow("tif", DisplayName = "TIF Test")]
+        [DataRow("webp", DisplayName = "WEBP Test")]
         public void CanDetectImages(string extension)
         {
             DetectType(extension);
@@ -71,7 +73,9 @@ namespace FileTypeInterrogator.Tests
         [DataRow("avi", DisplayName = "AVI Test")]
         [DataRow("flv", DisplayName = "FLV Test")]
         [DataRow("mid", DisplayName = "MID Test")]
+        [DataRow("mkv", DisplayName = "MKV Test")]
         [DataRow("mp4", DisplayName = "MP4 Test")]
+        [DataRow("webm", DisplayName = "WEBM Test")]
         [DataRow("wmv", DisplayName = "WMV Test")]
         public void CanDetectVideo(string extension)
         {
@@ -121,6 +125,14 @@ namespace FileTypeInterrogator.Tests
         [DataRow("rar", DisplayName = "RAR Test")]
         [DataRow("zip", DisplayName = "ZIP Test")]
         public void CanDetectCompressed(string extension)
+        {
+            DetectType(extension);
+        }
+
+        [DataTestMethod]
+        [DataRow("eml", DisplayName = "EML Test")]
+        [DataRow("vcf", DisplayName = "VCF Test")]
+        public void CanDetectOther(string extension)
         {
             DetectType(extension);
         }

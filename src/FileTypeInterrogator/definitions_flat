@@ -104,7 +104,7 @@
 0	long	4D546864		MIDI File	midi	audio/midi	mid
 0	long	3C4D616B657246696C6520		MapInfo Interchange Format File	mif	application/vnd.mif	
 0	long	56657273696F6E20		MapInfo Interchange Format File	mif	application/vnd.mif	
-0	long	1A45DFA3		Matroska Video File	mkv	video/x-matroska	
+0	long	1A45DFA3	6D6174726F736B61	Matroska Video File	mkv	video/x-matroska	
 0	long	4D4D4D440000		Meal-Master Recipe File	mmf	application/vnd.smaf	
 0	long	000000146674797071742020		Apple QuickTime Movie	mov	video/quicktime	
 4	long	6674797071742020		Apple QuickTime Movie	mov	video/quicktime	
@@ -138,6 +138,11 @@
 0	long	504B0304		OpenDocument Document Template	ott	application/vnd.oasis.opendocument.text-template	
 0	long	504B0304		OpenXPS File	oxps	application/oxps	
 0	long	64000000		Certificate Request File	p10	application/pkcs10	
+0	long	0A0001		Paintbrush Bitmap Image File	pcx	image/vnd.zbrush.pcx	
+0	long	0A0201		Paintbrush Bitmap Image File	pcx	image/vnd.zbrush.pcx	
+0	long	0A0301		Paintbrush Bitmap Image File	pcx	image/vnd.zbrush.pcx	
+0	long	0A0401		Paintbrush Bitmap Image File	pcx	image/vnd.zbrush.pcx	
+0	long	0A0501		Paintbrush Bitmap Image File	pcx	image/vnd.zbrush.pcx	
 512	long	0908100000060500		Paintbrush Bitmap Image File	pcx	image/vnd.zbrush.pcx	
 11	long	000000000000000000000000000000000000000000000000		Program Database	pdb	application/vnd.palm	
 0	long	4D2D5720506F636B6574204469637469		Program Database	pdb	application/vnd.palm	
