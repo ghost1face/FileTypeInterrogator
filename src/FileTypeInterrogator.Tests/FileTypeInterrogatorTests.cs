@@ -92,8 +92,11 @@ namespace FileTypeInterrogator.Tests
         [DataTestMethod]
         [DataRow("doc", DisplayName = "DOC Test")]
         [DataRow("docx", DisplayName = "DOC Test")]
+        [DataRow("odp", DisplayName = "ODP Test")]
+        [DataRow("odt", DisplayName = "ODT Test")]
         [DataRow("ppt", DisplayName = "PPT Test")]
         [DataRow("pptx", DisplayName = "PPTX Test")]
+        [DataRow("rtf", DisplayName = "RTF Test")]
         [DataRow("xls", DisplayName = "XLS Test")]
         [DataRow("xlsx", DisplayName = "XLSX Test")]
         public void CanDetectOffice(string extension)
