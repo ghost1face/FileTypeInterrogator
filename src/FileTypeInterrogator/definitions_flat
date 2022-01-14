@@ -24,7 +24,7 @@
 0	long	3C		Microsoft ASF Redirector File	asx	video/x-ms-asf	
 0	long	2E736E64		Audacity Audio File	au	audio/basic	
 0	long	646E732E		Audacity Audio File	au	audio/basic	
-0	long	52494646		Audio Video Interleave File	avi	video/x-msvideo	
+0	long	52494646	415649204C495354	Audio Video Interleave File	avi	video/x-msvideo	
 0	long	424D		Bitmap Image File	bmp	image/bmp	
 0	long	425A68		Bzip2 Compressed File	bz2	application/x-bzip2	
 0	long	49536328		Windows Cabinet File	cab	application/vnd.ms-cab-compressed	
@@ -160,7 +160,7 @@
 0	long	424F4F4B4D4F4249		Product Representation Compact File	prc	application/vnd.palm	
 60	long	74424D504B6E5772		Product Representation Compact File	prc	application/vnd.palm	
 0	long	38425053		Adobe Photoshop Document	psd	image/vnd.adobe.photoshop	
-0	long	52494646		PureVoice Audio File	qcp	audio/qcelp	
+0	long	52494646	514C434D666D7420	PureVoice Audio File	qcp	audio/qcelp	
 0	long	00004D4D585052		QuarkXPress Document	qxd	application/vnd.Quark.QuarkXPress	
 0	long	2E524D460000001200		Real Audio File	ra	audio/x-realaudio	
 0	long	2E7261FD00		Real Audio File	ra	audio/x-realaudio	
@@ -201,7 +201,7 @@
 0	long	0001000000		TrueType Font	ttf	application/font-sfnt	
 0	long	454E5452595643440200000102001858		Virtual CD	vcd	application/x-cdlink	
 0	long	424547494E3A56434152440D0A		vCard File	vcf	text/vcard	
-0	long	52494646		WAVE Audio File	wav	audio/x-wav	
+0	long	52494646	57415645666D7420	WAVE Audio File	wav	audio/x-wav	
 0	long	1A45DFA3		WebM Video File	webm	video/webm	
 0	long	52494646		WebP Image	webp	image/webp	
 0	long	0000020006040600080000000000		Lotus Worksheet	wk1	application/vnd.lotus-1-2-3	

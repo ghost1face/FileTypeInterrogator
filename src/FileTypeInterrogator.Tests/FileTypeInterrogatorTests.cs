@@ -85,6 +85,7 @@ namespace FileTypeInterrogator.Tests
         [DataRow("mp3", DisplayName = "MP3 Test")]
         [DataRow("ogg", DisplayName = "OGG Test")]
         [DataRow("ra", DisplayName = "RA Test")]
+        [DataRow("wav", DisplayName = "WAV Test")]
         public void CanDetectAudio(string extension)
         {
             DetectType(extension);
