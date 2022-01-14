@@ -116,6 +116,7 @@ namespace FileTypeInterrogator.Tests
 
         [DataTestMethod]
         [DataRow("7z", DisplayName = "7Z Test")]
+        [DataRow("gz", DisplayName = "GZ Test")]
         [DataRow("rar", DisplayName = "RAR Test")]
         [DataRow("zip", DisplayName = "ZIP Test")]
         public void CanDetectCompressed(string extension)
@@ -131,7 +132,7 @@ namespace FileTypeInterrogator.Tests
                 Assert.IsTrue(
                     result.FileType.Equals(extension, StringComparison.OrdinalIgnoreCase) ||
                     result.Alias?.Any(a => a.Equals(extension, StringComparison.OrdinalIgnoreCase)) == true,
-                    "{0} and {1} do not equal {2}", 
+                    "{0} and {1} do not equal {2}",
                     result.FileType, result.Alias?.FirstOrDefault(), extension);
             });
         }
