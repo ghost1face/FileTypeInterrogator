@@ -52,6 +52,7 @@ namespace FileTypeInterrogator.Tests
         }
 
         [DataTestMethod]
+        [DataRow("ai", DisplayName = "AI Test")]
         [DataRow("bmp", DisplayName = "BMP Test")]
         [DataRow("gif", DisplayName = "GIF Test")]
         [DataRow("ico", DisplayName = "ICO Test")]
@@ -129,7 +130,9 @@ namespace FileTypeInterrogator.Tests
                 Assert.IsNotNull(result);
                 Assert.IsTrue(
                     result.FileType.Equals(extension, StringComparison.OrdinalIgnoreCase) ||
-                    result.Alias?.Any(a => a.Equals(extension, StringComparison.OrdinalIgnoreCase)) == true);
+                    result.Alias?.Any(a => a.Equals(extension, StringComparison.OrdinalIgnoreCase)) == true,
+                    "{0} and {1} do not equal {2}", 
+                    result.FileType, result.Alias?.FirstOrDefault(), extension);
             });
         }
 

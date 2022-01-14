@@ -145,6 +145,7 @@
 0	long	736D5F		Program Database	pdb	application/vnd.palm	
 0	long	737A657A		Program Database	pdb	application/vnd.palm	
 0	long	ACED0005737200126267626C69747A2E		Program Database	pdb	application/vnd.palm	
+0	long	25504446	786D6C6E733A696C6C7573747261746F72	Adobe Illustrator Artwork File	ai	application/postscript	
 0	long	25504446		Portable Document Format File	pdf	application/pdf	
 0	long	50350A		Portable Gray Map Image	pgm	image/x-portable-graymap	
 0	long	5B706C61796C6973745D		PL/SQL Stored Procedure	pls	application/pls+xml	
