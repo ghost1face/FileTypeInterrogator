@@ -145,7 +145,7 @@ namespace FileTypeInterrogator.Tests
                 Assert.IsTrue(
                     result.FileType.Equals(extension, StringComparison.OrdinalIgnoreCase) ||
                     result.Alias?.Any(a => a.Equals(extension, StringComparison.OrdinalIgnoreCase)) == true,
-                    "{0} and {1} do not equal {2}",
+                    "{0} and/or {1} do not equal {2}",
                     result.FileType, result.Alias?.FirstOrDefault(), extension);
             });
         }

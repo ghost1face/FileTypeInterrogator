@@ -46,7 +46,7 @@
 0	long	5041474544554D50		Windows Memory Dump	dmp	application/vnd.tcpdump.pcap	
 0	long	444D5321		Disk Masher Image	dms	text/vnd.DMClientScript	
 0	long	0D444F43		Microsoft Word Document	doc	application/msword	
-0	long	CF11E0A1B11AE100		Microsoft Word Document	doc	application/msword	
+0	long	D0CF11E0A1B11AE100	57006F007200640044006F00630075006D0065006E0074	Microsoft Word Document	doc	application/msword	
 0	long	DBA52D00		Microsoft Word Document	doc	application/msword	
 512	long	ECA5C100		Microsoft Word Document	doc	application/msword	
 0	long	504B030414000600	646F63756D656E742E786D6C	Microsoft Word Open XML Document	docx	application/vnd.openxmlformats-officedocument.wordprocessingml.document	
