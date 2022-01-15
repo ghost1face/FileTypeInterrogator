@@ -173,7 +173,7 @@ namespace FileTypeInterrogator.Tests
             // GetFiles with searchPattern returns 4 character extensions when
             // filtering for 3 so we'll filter ourselves
             return Directory.GetFiles(GetTestFileDirectory(), $"*.{type}")
-                .Where(path => path.EndsWith(type, StringComparison.OrdinalIgnoreCase));
+                .Where(path => path.EndsWith(type));
         }
 
         private string GetTestFileDirectory()
