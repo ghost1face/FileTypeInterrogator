@@ -17,7 +17,7 @@ namespace FileTypeInterrogator.Tests
         [TestMethod]
         public void CanDetectAlias_Jpg()
         {
-            var filePath = GetFileByType("JPG");
+            var filePath = GetFileByType("jpg");
             var fileContents = File.ReadAllBytes(filePath);
 
             var result = fileTypeInterrogator.IsType(fileContents, "jpg");
@@ -28,7 +28,7 @@ namespace FileTypeInterrogator.Tests
         [TestMethod]
         public void CanDetectAlias_Jpeg()
         {
-            var filePath = GetFileByType("JPG");
+            var filePath = GetFileByType("jpg");
             var fileContents = File.ReadAllBytes(filePath);
 
             var result = fileTypeInterrogator.IsType(fileContents, "jpeg");
@@ -39,7 +39,7 @@ namespace FileTypeInterrogator.Tests
         [TestMethod]
         public void CanDetectJpg_By_MimeType()
         {
-            var filePath = GetFileByType("JPG");
+            var filePath = GetFileByType("jpg");
             var fileContents = File.ReadAllBytes(filePath);
 
             var result = fileTypeInterrogator.IsType(fileContents, "image/jpeg");
