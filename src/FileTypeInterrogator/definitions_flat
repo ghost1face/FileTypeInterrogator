@@ -205,7 +205,7 @@
 0	long	47		Tab Separated Values File	tsv	text/tab-separated-values	
 0	long	0001000000		TrueType Font	ttf	application/font-sfnt	
 0	long	454E5452595643440200000102001858		Virtual CD	vcd	application/x-cdlink	
-0	long	424547494E3A56434152440D0A		vCard File	vcf	text/vcard	
+0	long	424547494E3A5643415244		vCard File	vcf	text/vcard	
 0	long	52494646	57415645666D7420	WAVE Audio File	wav	audio/x-wav	
 0	long	1A45DFA3		WebM Video File	webm	video/webm	
 0	long	52494646		WebP Image	webp	image/webp	
