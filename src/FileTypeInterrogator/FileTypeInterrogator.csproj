@@ -9,11 +9,15 @@
     <PackageTags>file-type-detection file-types magic-numbers content-type mime-type</PackageTags>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <AssemblyVersion>1.1.0</AssemblyVersion>
+    <Version>1.1.0</Version>
     <Authors>ghost1face</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <PackageReleaseNotes>Update to use flat file definitions, unit tested</PackageReleaseNotes>
+    <PackageReleaseNotes>
+      * Update file type support
+      * Resolved issues with office types not being detected
+      * .NET6 support</PackageReleaseNotes>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
