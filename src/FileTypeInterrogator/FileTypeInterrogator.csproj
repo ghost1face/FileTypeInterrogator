@@ -43,6 +43,10 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3' Or '$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Memory" Version="4.5.5" />
+  </ItemGroup>
+
   <ItemGroup>
     <None Remove="definitions_flat" />
     <None Include="..\..\LICENSE.md">
