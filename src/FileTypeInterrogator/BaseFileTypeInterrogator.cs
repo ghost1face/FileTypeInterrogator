@@ -7,7 +7,7 @@ using System.Text;
 namespace FileTypeInterrogator
 {
     /// <summary>
-    /// Base for interacting files by magic number
+    /// Base for identifying files by magic number.
     /// </summary>
     public abstract class BaseFileTypeInterrogator : IFileTypeInterrogator
     {
@@ -124,7 +124,7 @@ namespace FileTypeInterrogator
             return false;
         }
 
-        private static bool IsMatchingType(IList<byte> input, FileTypeInfo type)
+        private static bool IsMatchingType(ReadOnlySpan<byte> input, FileTypeInfo type)
         {
             // find an initial match based on the header and offset
             var isMatch = FindMatch(input, type.Header, type.Offset);
@@ -135,7 +135,7 @@ namespace FileTypeInterrogator
             {
                 // find all indices of matching the 1st byte of the additional sequence
                 var matchingIndices = new List<int>();
-                for (int i = 0; i < input.Count; i++)
+                for (int i = 0; i < input.Length; i++)
                 {
                     if (input[i] == type.SubHeader[0])
                         matchingIndices.Add(i);
@@ -154,19 +154,19 @@ namespace FileTypeInterrogator
             return isMatch;
         }
 
-        private static bool FindMatch(IList<byte> input, IList<byte> searchArray, int offset = 0)
+        private static bool FindMatch(ReadOnlySpan<byte> input, ReadOnlySpan<byte> searchArray, int offset = 0)
         {
             // file isn't long enough to even search the proper index, not a match
-            if (input.Count <= offset)
+            if (input.Length <= offset)
                 return false;
 
             int matchingCount = 0;
-            for (var i = 0; i < searchArray.Count; i++)
+            for (var i = 0; i < searchArray.Length; i++)
             {
                 // set the offset location
                 var calculatedOffset = i + offset;
 
-                if (input.Count <= calculatedOffset)
+                if (input.Length <= calculatedOffset)
                     break;
 
                 // if file offset is not set to zero, we need to take this into account when comparing.
@@ -179,7 +179,7 @@ namespace FileTypeInterrogator
                 }
                 matchingCount++;
             }
-            return matchingCount == searchArray.Count;
+            return matchingCount == searchArray.Length;
         }
 
         private static IEnumerable<FileTypeInfo> LoadFileTypes(string flatFileData)
@@ -234,7 +234,7 @@ namespace FileTypeInterrogator
             return isAscii || IsUTF8(input, out hasBOM);
         }
 
-        private static bool IsAscii(byte[] input)
+        private static bool IsAscii(ReadOnlySpan<byte> input)
         {
             const byte maxAscii = 0x7F;
             foreach (var b in input)
