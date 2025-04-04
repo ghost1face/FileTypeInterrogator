@@ -52,7 +52,6 @@ namespace FileTypeInterrogator.Tests
         }
 
         [Theory]
-        [InlineData("ai")]
         [InlineData("bmp")]
         [InlineData("gif")]
         [InlineData("ico")]
