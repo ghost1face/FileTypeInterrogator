@@ -1,20 +1,18 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
+﻿using System.IO;
+using Xunit;
 
 namespace FileTypeInterrogator.Tests
 {
-    [TestClass]
     public partial class FileTypeInterrogatorTests
     {
         private IFileTypeInterrogator fileTypeInterrogator;
 
-        [TestInitialize]
-        public void Init()
+        public FileTypeInterrogatorTests()
         {
             fileTypeInterrogator = new FileTypeInterrogator();
         }
 
-        [TestMethod]
+        [Fact]
         public void CanDetectAlias_Jpg()
         {
             var filePath = GetFileByType("jpg");
@@ -22,10 +20,10 @@ namespace FileTypeInterrogator.Tests
 
             var result = fileTypeInterrogator.IsType(fileContents, "jpg");
 
-            Assert.IsTrue(result);
+            Assert.True(result);
         }
 
-        [TestMethod]
+        [Fact]
         public void CanDetectAlias_Jpeg()
         {
             var filePath = GetFileByType("jpg");
@@ -33,10 +31,10 @@ namespace FileTypeInterrogator.Tests
 
             var result = fileTypeInterrogator.IsType(fileContents, "jpeg");
 
-            Assert.IsTrue(result);
+            Assert.True(result);
         }
 
-        [TestMethod]
+        [Fact]
         public void CanDetectJpg_By_MimeType()
         {
             var filePath = GetFileByType("jpg");
@@ -44,7 +42,7 @@ namespace FileTypeInterrogator.Tests
 
             var result = fileTypeInterrogator.IsType(fileContents, "image/jpeg");
 
-            Assert.IsTrue(result);
+            Assert.True(result);
         }
     }
 }
