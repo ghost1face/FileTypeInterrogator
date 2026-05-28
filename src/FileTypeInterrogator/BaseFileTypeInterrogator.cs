@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,6 +12,9 @@ namespace FileTypeInterrogator
     /// </summary>
     public abstract class BaseFileTypeInterrogator : IFileTypeInterrogator
     {
+        private static readonly UTF8Encoding utf8WithBomEncoding = new UTF8Encoding(true, true);
+        private static readonly UTF8Encoding utf8WithoutBomEncoding = new UTF8Encoding(false, true);
+        private static readonly byte[] utf8Bom = utf8WithBomEncoding.GetPreamble();
         private readonly Lazy<IEnumerable<FileTypeInfo>> lazyFileTypes;
         private readonly FileTypeInfo asciiFileType = new FileTypeInfo("ASCII Text", "txt", "text/plain", null);
         private readonly FileTypeInfo utf8FileType = new FileTypeInfo("UTF-8 Text", "txt", "text/plain", null);
@@ -43,13 +47,29 @@ namespace FileTypeInterrogator
             if (inputStream.CanSeek)
                 inputStream.Position = 0;
 
-            byte[] byteBuffer = new byte[inputStream.Length];
-            _ = inputStream.Read(byteBuffer, 0, byteBuffer.Length);
+            int bufferSize = checked((int)inputStream.Length);
+            byte[] byteBuffer = ArrayPool<byte>.Shared.Rent(bufferSize);
+            try
+            {
+                int bytesRead = 0;
+                while (bytesRead < bufferSize)
+                {
+                    int read = inputStream.Read(byteBuffer, bytesRead, bufferSize - bytesRead);
+                    if (read == 0)
+                        break;
 
-            if (inputStream.CanSeek)
-                inputStream.Position = 0;
+                    bytesRead += read;
+                }
 
-            return DetectType(byteBuffer);
+                return DetectType(byteBuffer, bytesRead);
+            }
+            finally
+            {
+                if (inputStream.CanSeek)
+                    inputStream.Position = 0;
+
+                ArrayPool<byte>.Shared.Return(byteBuffer);
+            }
         }
 
         /// <summary>
@@ -59,24 +79,31 @@ namespace FileTypeInterrogator
         /// <returns></returns>
         public FileTypeInfo DetectType(byte[] fileContent)
         {
+            return DetectType(fileContent, fileContent?.Length ?? 0);
+        }
+
+        private FileTypeInfo DetectType(byte[] fileContent, int length)
+        {
             if (fileContent == null)
                 throw new ArgumentNullException(nameof(fileContent));
 
-            if (fileContent.Length == 0)
+            if (length == 0)
                 throw new ArgumentException("input must not be empty");
+
+            ReadOnlySpan<byte> input = fileContent.AsSpan(0, length);
 
             // iterate over each type and determine if we have a match based on file signature.
             foreach (var fileTypeInfo in AvailableTypes)
             {
                 // if we found a match return the matching filetypeinfo
-                if (IsMatchingType(fileContent, fileTypeInfo))
+                if (IsMatchingType(input, fileTypeInfo))
                     return fileTypeInfo;
             }
 
-            if (IsAscii(fileContent))
+            if (IsAscii(input))
                 return asciiFileType;
 
-            if (IsUTF8(fileContent, out bool hasBOM))
+            if (IsUTF8(fileContent, length, out bool hasBOM))
                 return hasBOM ? utf8FileTypeWithBOM : utf8FileType;
 
             return null;
@@ -108,11 +135,15 @@ namespace FileTypeInterrogator
         /// <returns></returns>
         public bool IsType(byte[] fileContent, string extensionAliasOrMimeType)
         {
-            foreach (var fileTypeInfo in AvailableTypes.Where(t =>
-                t.FileType.Equals(extensionAliasOrMimeType, StringComparison.OrdinalIgnoreCase) ||
-                t.MimeType.Equals(extensionAliasOrMimeType, StringComparison.OrdinalIgnoreCase) ||
-                (t.Alias != null && t.Alias.Contains(extensionAliasOrMimeType, StringComparer.OrdinalIgnoreCase))))
+            foreach (var fileTypeInfo in AvailableTypes)
             {
+                if (!(fileTypeInfo.FileType.Equals(extensionAliasOrMimeType, StringComparison.OrdinalIgnoreCase) ||
+                    fileTypeInfo.MimeType.Equals(extensionAliasOrMimeType, StringComparison.OrdinalIgnoreCase) ||
+                    (fileTypeInfo.Alias != null && fileTypeInfo.Alias.Contains(extensionAliasOrMimeType, StringComparer.OrdinalIgnoreCase))))
+                {
+                    continue;
+                }
+
                 if (IsMatchingType(fileContent, fileTypeInfo))
                     return true;
             }
@@ -131,23 +162,17 @@ namespace FileTypeInterrogator
 
             // some file types have the same header
             // but different signature in another location, if its one of these determine what the true file type is
-            if (isMatch && type.SubHeader != null)
+            if (isMatch && type.SubHeader != null && type.SubHeader.Length > 0)
             {
-                // find all indices of matching the 1st byte of the additional sequence
-                var matchingIndices = new List<int>();
-                for (int i = 0; i < input.Length; i++)
+                isMatch = false;
+                for (int i = 0; i <= input.Length - type.SubHeader.Length; i++)
                 {
                     if (input[i] == type.SubHeader[0])
-                        matchingIndices.Add(i);
-                }
-
-                // investigate all of them for a match
-                foreach (int potentialMatchingIndex in matchingIndices)
-                {
-                    isMatch = FindMatch(input, type.SubHeader, potentialMatchingIndex);
-
-                    if (isMatch)
-                        break;
+                    {
+                        isMatch = FindMatch(input, type.SubHeader, i);
+                        if (isMatch)
+                            break;
+                    }
                 }
             }
 
@@ -231,7 +256,7 @@ namespace FileTypeInterrogator
 
             bool isAscii = IsAscii(input);
 
-            return isAscii || IsUTF8(input, out hasBOM);
+            return isAscii || IsUTF8(input, input.Length, out hasBOM);
         }
 
         private static bool IsAscii(ReadOnlySpan<byte> input)
@@ -245,20 +270,19 @@ namespace FileTypeInterrogator
             return true;
         }
 
-        private static bool IsUTF8(byte[] input, out bool hasBOM)
+        private static bool IsUTF8(byte[] input, int length, out bool hasBOM)
         {
-            UTF8Encoding utf8WithBOM = new UTF8Encoding(true, true);
             bool isUTF8 = true;
-            byte[] bom = utf8WithBOM.GetPreamble();
-            int bomLength = bom.Length;
+            int bomLength = utf8Bom.Length;
 
             hasBOM = false;
 
-            if (input.Length >= bomLength && bom.SequenceEqual(input.Take(bomLength)))
+            ReadOnlySpan<byte> inputSpan = input.AsSpan(0, length);
+            if (length >= bomLength && inputSpan.Slice(0, bomLength).SequenceEqual(utf8Bom))
             {
                 try
                 {
-                    utf8WithBOM.GetString(input, bomLength, input.Length - bomLength);
+                    utf8WithBomEncoding.GetString(input, bomLength, length - bomLength);
                     hasBOM = true;
                 }
                 catch (ArgumentException)
@@ -270,10 +294,9 @@ namespace FileTypeInterrogator
 
             if (isUTF8 && !hasBOM)
             {
-                UTF8Encoding utf8WithoutBOM = new UTF8Encoding(false, true);
                 try
                 {
-                    utf8WithoutBOM.GetString(input, 0, input.Length);
+                    utf8WithoutBomEncoding.GetString(input, 0, length);
                     isUTF8 = true;
                 }
                 catch (ArgumentException)
