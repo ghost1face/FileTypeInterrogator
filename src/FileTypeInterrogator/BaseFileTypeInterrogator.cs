@@ -15,10 +15,13 @@ namespace FileTypeInterrogator
         private static readonly UTF8Encoding Utf8WithBomEncoding = new UTF8Encoding(true, true);
         private static readonly UTF8Encoding Utf8WithoutBomEncoding = new UTF8Encoding(false, true);
         private static readonly byte[] Utf8Bom = Utf8WithBomEncoding.GetPreamble();
+
         private readonly Lazy<IEnumerable<FileTypeInfo>> lazyFileTypes;
         private readonly FileTypeInfo asciiFileType = new FileTypeInfo("ASCII Text", "txt", "text/plain", null);
         private readonly FileTypeInfo utf8FileType = new FileTypeInfo("UTF-8 Text", "txt", "text/plain", null);
-        private readonly FileTypeInfo utf8FileTypeWithBOM = new FileTypeInfo("UTF-8 Text with BOM", "txt", "text/plain", null);
+
+        private readonly FileTypeInfo utf8FileTypeWithBOM =
+            new FileTypeInfo("UTF-8 Text with BOM", "txt", "text/plain", null);
 
         /// <summary>
         /// Initializes a <see cref="BaseFileTypeInterrogator"/> with the provided json definition.
@@ -154,7 +157,8 @@ namespace FileTypeInterrogator
             {
                 if (fileTypeInfo.FileType.Equals(extensionAliasOrMimeType, StringComparison.OrdinalIgnoreCase) ||
                     fileTypeInfo.MimeType.Equals(extensionAliasOrMimeType, StringComparison.OrdinalIgnoreCase) ||
-                    (fileTypeInfo.Alias != null && fileTypeInfo.Alias.Contains(extensionAliasOrMimeType, StringComparer.OrdinalIgnoreCase)))
+                    (fileTypeInfo.Alias != null &&
+                     fileTypeInfo.Alias.Contains(extensionAliasOrMimeType, StringComparer.OrdinalIgnoreCase)))
                 {
                     if (IsMatchingType(fileContent.AsSpan(0, length), fileTypeInfo))
                         return true;
@@ -216,8 +220,10 @@ namespace FileTypeInterrogator
                     matchingCount = 0;
                     break;
                 }
+
                 matchingCount++;
             }
+
             return matchingCount == searchArray.Length;
         }
 
@@ -239,7 +245,8 @@ namespace FileTypeInterrogator
                     string alias = segments.Length == 8 ? segments[7] : null;
 
                     byte[] sigBytes = HexStringToByteArray(signature);
-                    byte[] additionalBytes = string.IsNullOrWhiteSpace(additional) ? null : HexStringToByteArray(additional);
+                    byte[] additionalBytes =
+                        string.IsNullOrWhiteSpace(additional) ? null : HexStringToByteArray(additional);
                     string[] aliases = string.IsNullOrWhiteSpace(alias) ? null : alias.Split('|');
 
                     yield return new FileTypeInfo(
@@ -281,6 +288,7 @@ namespace FileTypeInterrogator
                 if (b > maxAscii)
                     return false;
             }
+
             return true;
         }
 
